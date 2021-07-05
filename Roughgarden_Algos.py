@@ -74,11 +74,65 @@ def Multiply(x,y):
 
 #Answer: 8539734222673567065463550869546574495034888535765114961879601127067743044893204848617875072216249073013374895871952806582723184
 
+#Question 2
+
+#Download the IntegerArray.txt. 
+#This file contains all of the 100,000 integers between 1 and 100,000 (inclusive) in some order, with no integer repeated.
+#Your task is to compute the number of inversions in the file given, where the i^th row of the file indicates the i^th entry of an array.
+#Because of the large size of this array, you should implement the fast divide-and-conquer algorithm covered in the video lectures.
+#The numeric answer for the given input file should be typed in the space below.
+
+import csv
+with open ('IntegerArray.txt', newline='') as intlist:
+    reader = csv.reader(intlist, delimiter=' ')
+    arr = []
+    for row in reader:
+        arr.append(int(row[0]))
+
+#Remember: This only works if there are no duplicate integers in the array. 
+
+def baseSortAndInversionCount(x, inversions): #inversions = 0
+    if len(x) == 1:
+        return x, inversions
+    elif len(x) == 2:
+        if x[0] > x[1]:
+            y = [x[1],x[0]]
+            inversions += 1
+            return y, inversions
+        else:
+            return x, inversions
 
 
+    
+def inversionCounter(somearray, inversions): #inversions = 0
+    n = len(somearray)
+    if n <= 2:
+        return baseSortAndInversionCount(somearray, inversions)
+    else:
+        half = n//2
+        first, firstInversions = inversionCounter(somearray[:half],inversions)
+        second, secondInversions = inversionCounter(somearray[half:],inversions)
+        final =  []
+        i = 0
+        j = 0
+        inversions += firstInversions + secondInversions
+        while len(final) < n:
+            if i < len(first):
+                if j < len(second):
+                    if first[i] < second[j]:
+                        final.append(first[i])  
+                        i += 1
+                    else:
+                        final.append(second[j])
+                        j += 1
+                        inversions += len(first)-i
+                else:
+                    final += first[i:]
+                    return final, inversions
+            elif j < len(second):
+                final += second[j:]
+                return final, inversions    
+        return final, inversions
 
-
-
-
-
+print(inversionCounter(arr,0)[1])
 
