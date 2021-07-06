@@ -89,9 +89,11 @@ with open ('IntegerArray.txt', newline='') as intlist:
     for row in reader:
         arr.append(int(row[0]))
 
-#Remember: This only works if there are no duplicate integers in the array. 
+#Remember: This only works if there are no duplicate integers in the array.
 
-def baseSortAndInversionCount(x, inversions): #inversions = 0
+
+#Base Case Handler.
+def baseSortAndInversionCount(x, inversions): #inversions = 0    
     if len(x) == 1:
         return x, inversions
     elif len(x) == 2:
@@ -113,8 +115,7 @@ def inversionCounter(somearray, inversions): #inversions = 0
         first, firstInversions = inversionCounter(somearray[:half],inversions)
         second, secondInversions = inversionCounter(somearray[half:],inversions)
         final =  []
-        i = 0
-        j = 0
+        i = j = 0
         inversions += firstInversions + secondInversions
         while len(final) < n:
             if i < len(first):
@@ -134,5 +135,6 @@ def inversionCounter(somearray, inversions): #inversions = 0
                 return final, inversions    
         return final, inversions
 
-print(inversionCounter(arr,0)[1])
+#print(inversionCounter(arr,0)[1])
+# Answer: 2407905288
 
