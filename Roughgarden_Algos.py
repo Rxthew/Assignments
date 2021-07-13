@@ -138,3 +138,57 @@ def inversionCounter(somearray, inversions): #inversions = 0
 #print(inversionCounter(arr,0)[1])
 # Answer: 2407905288
 
+#Question 3
+
+# Download Quicksort.txt
+#
+#The file contains all of the integers between 1 and 10,000 (inclusive, with no repeats) in unsorted order.  The integer in the i^th
+# row of the file gives you the i^th entry of an input array. Your task is to compute the total number of comparisons used to sort the
+# given input file by QuickSort. As you know, the number of comparisons depends on which elements are chosen as pivots, so we'll ask 
+# you to explore three different pivoting rules. You should not count comparisons one-by-one.  Rather, when there is a recursive call 
+# on a subarray of length m, you should simply add m−1 to your running total of comparisons. (This is because the pivot element is 
+# compared to each of the other m−1 elements in the subarray in this recursive call.)
+#
+# WARNING: The Partition subroutine can be implemented in several different ways, and different implementations can give you 
+# differing numbers of comparisons.  For this problem, you should implement the Partition subroutine exactly as it is described 
+# in the video lectures (otherwise you might get the wrong answer).
+
+#DIRECTIONS FOR THIS PROBLEM:
+
+#For the first part of the programming assignment, you should always use the first element of the array as the pivot element.
+
+#import csv
+with open ('New.txt', newline='') as quicklist:
+    reader = csv.reader(quicklist, delimiter=' ')
+    quick = []
+    for row in reader:
+        quick.append(int(row[0]))
+
+
+
+def quickCompare(array, length, c):
+    #Base case
+    if length == 1:
+        return c
+    else:
+    #Partition
+        pivot = array[0]
+        i = j = array[1]
+        while j > length:
+            if array[j] < pivot:
+                x, y = array[i], array[j]
+                array[i], array[j] = y, x
+                j += 1
+                i += 1
+            else:
+                j += 1
+        x = array[i]
+        array[i] = pivot
+        array[0] = x
+    #ignoring c for now
+    left, leftLength = quickCompare(array[:pivot], len(array[:pivot]), #c  )
+    right, rightLength = quickCompare(array[pivot + 1:], len(array[pivot + 1:]), #c)
+    #return left + pivot + right?
+
+    
+
