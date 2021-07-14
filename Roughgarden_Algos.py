@@ -158,37 +158,39 @@ def inversionCounter(somearray, inversions): #inversions = 0
 #For the first part of the programming assignment, you should always use the first element of the array as the pivot element.
 
 #import csv
-with open ('New.txt', newline='') as quicklist:
+with open ('Quicksort.txt', newline='') as quicklist:
     reader = csv.reader(quicklist, delimiter=' ')
     quick = []
     for row in reader:
         quick.append(int(row[0]))
 
 
-
-def quickCompare(array, length, c):
+def quickCompare(array, c):
     #Base case
-    if length == 1:
-        return c
+    if len(array) == 1 or len(array) == 0:
+        return array, c
     else:
     #Partition
-        pivot = array[0]
-        i = j = array[1]
-        while j > length:
-            if array[j] < pivot:
-                x, y = array[i], array[j]
-                array[i], array[j] = y, x
+        i = j = 1
+        while j < len(array):
+            if array[j] < array[0]:
+                array[j], array[i] = array[i], array[j]
                 j += 1
                 i += 1
             else:
                 j += 1
-        x = array[i]
-        array[i] = pivot
-        array[0] = x
-    #ignoring c for now
-    left, leftLength = quickCompare(array[:pivot], len(array[:pivot]), #c  )
-    right, rightLength = quickCompare(array[pivot + 1:], len(array[pivot + 1:]), #c)
-    #return left + pivot + right?
+        array[i-1], array[0] = array[0], array[i-1]
+    #Recursive Calls
+    left, leftc = quickCompare(array[:i-1], len(array[:i-1]))  
+    right, rightc = quickCompare(array[i:], len(array[i:]))
+    left.append(array[i-1])
+    c += leftc + rightc
+    return  left + right,  c
 
-    
+
+#print(quickCompare(quick, 0)[1])
+#Answer: 162085    
+
+
+        
 
