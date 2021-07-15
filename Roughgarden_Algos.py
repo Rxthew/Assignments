@@ -191,6 +191,95 @@ def quickCompare(array, c):
 #print(quickCompare(quick, 0)[1])
 #Answer: 162085    
 
+#Compute the number of comparisons (as in Problem 1), always using the final element of the given array as the pivot element.
+#Again, be sure to implement the Partition subroutine exactly as it is described in the video lectures. Recall from the
+#lectures that, just before the main Partition subroutine, you should exchange the pivot element (i.e., the last element) 
+# with the first element.
 
-        
+def quickCompareSecond(array, c):
+        #Base case
+    if len(array) == 1 or len(array) == 0:
+        return array, c
+    else:
+        #Swap Pivot
+        array[-1], array[0] = array[0], array[-1]
+        #Partition
+        i = j = 1
+        while j < len(array):
+            if array[j] < array[0]:
+                array[j], array[i] = array[i], array[j]
+                j += 1
+                i += 1
+            else:
+                j += 1
+        array[i-1], array[0] = array[0], array[i-1]
+    #Recursive Calls
+        left, leftc = quickCompareSecond(array[:i-1], len(array[:i-1]))  
+        right, rightc = quickCompareSecond(array[i:], len(array[i:]))
+        left.append(array[i-1])
+        c += leftc + rightc
+    return  left + right,  c
+
+#print(quickCompareSecond(quick,0)[1])
+#Answer: 164123
+
+
+#Compute the number of comparisons (as in Problem 1), using the "median-of-three" pivot rule.  [The primary motivation behind
+#this rule is to do a little bit of extra work to get much better performance on input arrays that are nearly sorted or 
+#reverse sorted.]  In more detail, you should choose the pivot as follows.  Consider the first, middle, and final elements of
+#the given array.  (If the array has odd length it should be clear what the "middle" element is; for an array with even length
+#2 k, use the k^th element as the "middle" element. So for the array 4 5 6 7,  the "middle" element is the second one 
+# ---- 5 and not 6!)  Identify which of these three elements is the median (i.e., the one whose value is in between the other two),
+#and use this as your pivot.  As discussed in the first and second parts of this programming assignment, be sure to implement 
+#Partition exactly as described in the video lectures (including exchanging the pivot element with the first element just before 
+# the main Partition subroutine).
+
+#EXAMPLE: For the input array 8 2 4 5 7 1 you would consider the first (8), middle (4), and last (1) elements; since 4 is 
+#the median of the set {1,4,8}, you would use 4 as your pivot element.
+
+#SUBTLE POINT: A careful analysis would keep track of the comparisons made in identifying the median of the three candidate elements.
+#You should NOT do this.  That is, as in the previous two problems, you should simply add m − 1 to your running total of comparisons
+#every time you recurse on a subarray with length m.
+
+
+
+def choosePivot(array):
+    mid = len(array)//2 + len(array)%2 - 1 
+    pivots = [array[0], array[mid], array[-1]]
+    for i in range(0,2):
+        if pivots[i] > pivots[i+1]:
+            pivots[i], pivots[i+1] = pivots[i+1], pivots[i]
+        if i > 0 and pivots[i] < pivots[i-1]:
+            pivots[i-1], pivots[i] = pivots[i], pivots[i-1]
+    return pivots[1]
+
+
+def quickerCompare(array, c):
+        #Base case
+    if len(array) < 3:
+        return quickCompare(array, c)
+    else:
+        #Choose Pivot
+        pivot = choosePivot(array)
+        ind = array.index(pivot)
+        array[0], array[ind] = array[ind], array[0]
+        #Partition
+        i = j = 1
+        while j < len(array):
+            if array[j] < array[0]:
+                array[j], array[i] = array[i], array[j]
+                j += 1
+                i += 1
+            else:
+                j += 1
+        array[i-1], array[0] = array[0], array[i-1]
+    #Recursive Calls
+        left, leftc = quickerCompare(array[:i-1], len(array[:i-1]))  
+        right, rightc = quickerCompare(array[i:], len(array[i:]))
+        left.append(array[i-1])
+        c += leftc + rightc
+    return  left + right,  c
+
+#print(quickerCompare(quick,0)[1])
+#Answer: 138382
 
