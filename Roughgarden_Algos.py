@@ -283,3 +283,49 @@ def quickerCompare(array, c):
 #print(quickerCompare(quick,0)[1])
 #Answer: 138382
 
+#Question 4
+
+#Download kargerMinCut.txt
+
+#The file contains the adjacency list representation of a simple undirected graph. There are 200 vertices labeled 1 to 200. 
+#The first column in the file represents the vertex label, and the particular row (other entries except the first column) 
+#tells all the vertices that the vertex is adjacent to. So for example, the 6^th row looks like :
+# "6	155	56	52	120	......".  This just means that the vertex with label 6 is adjacent to (i.e., shares an edge with)
+# the vertices with labels 155,56,52,120,......,etc
+
+#Your task is to code up and run the randomized contraction algorithm for the min cut problem and use it on the above graph
+#to compute the min cut. 
+#(HINT: Note that you'll have to figure out an implementation of edge contractions.
+# Initially, you might want to do this naively, creating a new graph from the old every time there's an edge contraction.
+# But you should also think about more efficient implementations.)   (WARNING: As per the video lectures, please make sure 
+# to run the algorithm many times with different random seeds, and remember the smallest cut that you ever find.)  
+
+
+#Step 1:  have the interpreter read the data faithfully,
+
+with open ('test.txt',  newline='') as thislist:
+    reader = csv.reader(thislist, delimiter="\t" )
+    graph = {}
+    for row in reader:
+        if len(row) > 1:
+            graph[int(row[0])] = [int(i) for i in row[1:] if i != '']
+
+
+#focus on one iteration only for now
+#Step 2:  .....
+
+#Let's see:
+# 1 2 3 4
+# 2 1
+# 3 1 4
+# 4 1 3
+
+#So we want a function that compares the first column values of two rows
+#then iterates through the row values and forms a union of the two sets with distinct elements. 
+#(No such thing as self-loops if all elements distinct right?)
+#Once this is done. The first column value can be assigned to 'A'. 
+#I should think a dictionary is ideal for this sort of procedure.
+#Stopping condition when there are only a pair of vertices left (one of which is A). 
+# Count crossing edges == the length of the lesser array. 
+# Contraction in my first iteration will proceed from the last-most edge in the new array
+# Hm. What if there is a node unconnected to anything?   
