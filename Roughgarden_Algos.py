@@ -310,6 +310,33 @@ with open ('test.txt',  newline='') as thislist:
         if len(row) > 1:
             graph[int(row[0])] = [int(i) for i in row[1:] if i != '']
 
+#def minCut(graph):
+import random
+
+graph[1].append(1)
+graph['Merged'] = graph[1]
+del graph[1]
+length = len(graph)
+shuffled = [i for i in range(0,length)]
+for v in shuffled:
+    if v in graph and len(graph) > 2:
+        for edge in graph[v]:
+            if edge in graph['Merged']:
+                continue
+            else:
+                graph['Merged'].append(edge)
+        del graph[v]
+for i in graph:
+    if i != 'Merged':
+        crossed = i
+
+print(graph, len(graph[crossed]))
+
+
+
+ 
+
+
 
 #focus on one iteration only for now
 #Step 2:  .....
