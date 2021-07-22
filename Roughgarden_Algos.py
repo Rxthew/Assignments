@@ -301,19 +301,18 @@ def quicker_compare(array, c):
 # to run the algorithm many times with different random seeds, and remember the smallest cut that you ever find.)  
 
 
-#Step 1:  have the interpreter read the data faithfully,
-
-with open ('test.txt',  newline='') as thislist:
+with open ('kargerMinCut.txt',  newline='') as thislist:
     reader = csv.reader(thislist, delimiter="\t" )
     graph = {}
     for row in reader:
-        if len(row) > 1:
+        if len(row) > 1: #remove placeholder lists
             graph[int(row[0])] = [int(i) for i in row[1:] if i != '']
 
+
 import random
+import copy
 
-
-def new_host(graph, c):
+def new_host(graph, c): #helper function, 'host' nodes are distinguished in the graph as strings 
     if type(c) == int:
         graph[c].append(c)
         graph[str(c)] = graph[c]
@@ -322,7 +321,7 @@ def new_host(graph, c):
     else:
         return str(c)
 
-def merger(graph, host, proxy):
+def merger(graph, host, proxy): #helper function responsible for contraction 
     for edge in graph[proxy]:
         if edge in graph[host]:
             continue
@@ -332,25 +331,42 @@ def merger(graph, host, proxy):
     return
     
 def trial_cut(graph):
-    while len(graph) > 2:
-        host = random.choice(list(graph))
-        proxy = random.choice(list(graph))
-        if proxy in graph[host] or host in graph[proxy]:
+    tgraph = copy.deepcopy(graph)
+    while len(tgraph) > 2:
+        host = random.choice(list(tgraph))
+        proxy = host #This, and the following two lines ensure proxy != host
+        while proxy == host: 
+            proxy = random.choice(list(tgraph))
+        if proxy in tgraph[host] or host in tgraph[proxy]:
             if type(proxy) == str:
                 host, proxy = proxy, host
-                merger(graph, host, proxy)
+                merger(tgraph, host, proxy)
             else:
-                host = new_host(graph, host)
-                merger(graph, host, proxy)
-        elif type(host) == str and type(proxy) == str:
-            for i in graph[host]:
-                if i in graph[proxy] and i not in graph: #throwing up a key error
-                    merger(graph, host, proxy)
-    return graph
+                host = new_host(tgraph, host)
+                merger(tgraph, host, proxy)
+        elif type(host) == str and type(proxy) == str: #when 2 hosts meet.
+            for edge in tgraph[host]:
+                if edge in tgraph[proxy] and edge not in tgraph: 
+                    merger(tgraph, host, proxy)
+                    break
+        cuts = list(tgraph.values())
+        if len(cuts[0]) <= len(cuts[1]):
+             crossing = len(cuts[0])
+        else:
+             crossing = len(cuts[1])    
+    return tgraph, crossing
 
-print(trial_cut(graph))
 
-    
-# still need to store the graph at the end and the no. of crossing edges. Compare it to previous one
-# if > or == then delete if <  it becomes the benchmark 
+def min_cut(graph):
+    trials = 0
+    mincut = trial_cut(graph)[1]
+    while trials < 9999: #note: ideal implementation has no. of trials n^2*ln n (where n = # of vertices) 
+        result = trial_cut(graph)[1]
+        print(result)
+        if result < mincut:
+            mincut = result
+        trials += 1
+    return mincut
 
+#print(min_cut(graph))
+#Answer: Minimum cut has 20 crossing edges.
