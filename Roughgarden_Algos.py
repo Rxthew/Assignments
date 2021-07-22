@@ -165,7 +165,7 @@ with open ('Quicksort.txt', newline='') as quicklist:
         quick.append(int(row[0]))
 
 
-def quickCompare(array, c):
+def quick_compare(array, c):
     #Base case
     if len(array) == 1 or len(array) == 0:
         return array, c
@@ -181,14 +181,14 @@ def quickCompare(array, c):
                 j += 1
         array[i-1], array[0] = array[0], array[i-1]
     #Recursive Calls
-    left, leftc = quickCompare(array[:i-1], len(array[:i-1]))  
-    right, rightc = quickCompare(array[i:], len(array[i:]))
+    left, leftc = quick_compare(array[:i-1], len(array[:i-1]))  
+    right, rightc = quick_compare(array[i:], len(array[i:]))
     left.append(array[i-1])
     c += leftc + rightc
     return  left + right,  c
 
 
-#print(quickCompare(quick, 0)[1])
+#print(quick_compare(quick, 0)[1])
 #Answer: 162085    
 
 #Compute the number of comparisons (as in Problem 1), always using the final element of the given array as the pivot element.
@@ -196,7 +196,7 @@ def quickCompare(array, c):
 #lectures that, just before the main Partition subroutine, you should exchange the pivot element (i.e., the last element) 
 # with the first element.
 
-def quickCompareSecond(array, c):
+def quick_compare_second(array, c):
         #Base case
     if len(array) == 1 or len(array) == 0:
         return array, c
@@ -214,13 +214,13 @@ def quickCompareSecond(array, c):
                 j += 1
         array[i-1], array[0] = array[0], array[i-1]
     #Recursive Calls
-        left, leftc = quickCompareSecond(array[:i-1], len(array[:i-1]))  
-        right, rightc = quickCompareSecond(array[i:], len(array[i:]))
+        left, leftc = quick_compare_second(array[:i-1], len(array[:i-1]))  
+        right, rightc = quick_compare_second(array[i:], len(array[i:]))
         left.append(array[i-1])
         c += leftc + rightc
     return  left + right,  c
 
-#print(quickCompareSecond(quick,0)[1])
+#print(quick_compare_second(quick,0)[1])
 #Answer: 164123
 
 
@@ -243,7 +243,7 @@ def quickCompareSecond(array, c):
 
 
 
-def choosePivot(array):
+def choose_pivot(array):
     mid = len(array)//2 + len(array)%2 - 1 
     pivots = [array[0], array[mid], array[-1]]
     for i in range(0,2):
@@ -254,13 +254,13 @@ def choosePivot(array):
     return pivots[1]
 
 
-def quickerCompare(array, c):
+def quicker_compare(array, c):
         #Base case
     if len(array) < 3:
-        return quickCompare(array, c)
+        return quick_compare(array, c)
     else:
         #Choose Pivot
-        pivot = choosePivot(array)
+        pivot = choose_pivot(array)
         ind = array.index(pivot)
         array[0], array[ind] = array[ind], array[0]
         #Partition
@@ -274,13 +274,13 @@ def quickerCompare(array, c):
                 j += 1
         array[i-1], array[0] = array[0], array[i-1]
     #Recursive Calls
-        left, leftc = quickerCompare(array[:i-1], len(array[:i-1]))  
-        right, rightc = quickerCompare(array[i:], len(array[i:]))
+        left, leftc = quicker_compare(array[:i-1], len(array[:i-1]))  
+        right, rightc = quicker_compare(array[i:], len(array[i:]))
         left.append(array[i-1])
         c += leftc + rightc
     return  left + right,  c
 
-#print(quickerCompare(quick,0)[1])
+#print(quicker_compare(quick,0)[1])
 #Answer: 138382
 
 #Question 4
@@ -310,49 +310,47 @@ with open ('test.txt',  newline='') as thislist:
         if len(row) > 1:
             graph[int(row[0])] = [int(i) for i in row[1:] if i != '']
 
-#def minCut(graph):
 import random
 
-graph[1].append(1)
-graph['Merged'] = graph[1]
-del graph[1]
-length = len(graph)
-shuffled = [i for i in range(0,length)]
-for v in shuffled:
-    if v in graph and len(graph) > 2:
-        for edge in graph[v]:
-            if edge in graph['Merged']:
-                continue
+
+def new_host(graph, c):
+    if type(c) == int:
+        graph[c].append(c)
+        graph[str(c)] = graph[c]
+        del graph[c]
+        return str(c)
+    else:
+        return str(c)
+
+def merger(graph, host, proxy):
+    for edge in graph[proxy]:
+        if edge in graph[host]:
+            continue
+        else:
+            graph[host].append(edge)
+    del graph[proxy]
+    return
+    
+def trial_cut(graph):
+    while len(graph) > 2:
+        host = random.choice(list(graph))
+        proxy = random.choice(list(graph))
+        if proxy in graph[host] or host in graph[proxy]:
+            if type(proxy) == str:
+                host, proxy = proxy, host
+                merger(graph, host, proxy)
             else:
-                graph['Merged'].append(edge)
-        del graph[v]
-for i in graph:
-    if i != 'Merged':
-        crossed = i
+                host = new_host(graph, host)
+                merger(graph, host, proxy)
+        elif type(host) == str and type(proxy) == str:
+            for i in graph[host]:
+                if i in graph[proxy] and i not in graph: #throwing up a key error
+                    merger(graph, host, proxy)
+    return graph
 
-print(graph, len(graph[crossed]))
+print(trial_cut(graph))
 
+    
+# still need to store the graph at the end and the no. of crossing edges. Compare it to previous one
+# if > or == then delete if <  it becomes the benchmark 
 
-
- 
-
-
-
-#focus on one iteration only for now
-#Step 2:  .....
-
-#Let's see:
-# 1 2 3 4
-# 2 1
-# 3 1 4
-# 4 1 3
-
-#So we want a function that compares the first column values of two rows
-#then iterates through the row values and forms a union of the two sets with distinct elements. 
-#(No such thing as self-loops if all elements distinct right?)
-#Once this is done. The first column value can be assigned to 'A'. 
-#I should think a dictionary is ideal for this sort of procedure.
-#Stopping condition when there are only a pair of vertices left (one of which is A). 
-# Count crossing edges == the length of the lesser array. 
-# Contraction in my first iteration will proceed from the last-most edge in the new array
-# Hm. What if there is a node unconnected to anything?   
