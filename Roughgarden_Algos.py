@@ -397,3 +397,18 @@ def min_cut(graph):
 # and we strongly suggest that you exchange tips for doing this on the discussion forums.
 
 
+with open ('test.txt',  newline='') as SCC_graph:
+    reader = csv.reader(SCC_graph, delimiter="\t" )
+    dgraph = {}
+    for row in reader:
+        if len(row) > 1: #remove placeholder lists
+            dgraph[int(row[0])] = [int(i) for i in row[1:] if i != '']
+
+
+def reverse_arcs(g): #wrong implementation WIP
+    for node in g:
+        if len(g[node]) == 1:
+            node,g[node][0] = g[node][0], node
+    return g 
+
+
