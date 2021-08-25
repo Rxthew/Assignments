@@ -405,10 +405,13 @@ with open ('test.txt',  newline='') as SCC_graph:
             dgraph[int(row[0])] = [int(i) for i in row[1:] if i != '']
 
 
-def reverse_arcs(g): #wrong implementation WIP
+def reverse_arcs(g): 
     for node in g:
-        if len(g[node]) == 1:
-            node,g[node][0] = g[node][0], node
+        g[g[node][0]].append(node)
+    for node in g:
+        g[node] = g[node][1:]
     return g 
+
+
 
 
