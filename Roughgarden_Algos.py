@@ -413,5 +413,46 @@ def reverse_arcs(g):
     return g 
 
 
+#def get_finishing_times(g):
+#    start = len(g)
+#    explored[start] = []
+#    max = 0
+#    finished = 0
+
+#    for node in g:
+#        if len(g[node]) > max:
+#               max = len(g[node])
+
+#    for i in range(1,len(g)):
+#        source = start
+#        ind = 0
+#        while ind < max + 1:
+#                while source not in explored[start]:
+#                      ind = 0
+
+#                      #if len(g[source]) == 0:
+#                            #break
+
+#                      explored[source].append(source)  
+#                      source = g[source][ind]
+#                source = explored[start][-1]
+#                 if ind == len(g[source]): 
+#                       source.append(['finished :', finished + 1])
+#                       source = explored[start][-2]
+#                       if len(g[source]) > ind:
+#                           ind += 1
+#                       source = g[source][ind]
+#                  else:
+#                      ind += 1
+                 
+#                    
+                 
+                 
+#       if start > 1:
+#            start = start - 1
+
+#        g[len(g)]#continue this part.
+#        return len(g)
+
 
 
